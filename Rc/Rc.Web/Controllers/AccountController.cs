@@ -8,14 +8,15 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using RavenDB.AspNet.Identity;
 using Microsoft.Owin.Security.OAuth;
 using Rc.Web.Models;
 using Rc.Web.Providers;
 using Rc.Web.Results;
+using Raven.Client;
 
 namespace Rc.Web.Controllers
 {
@@ -26,14 +27,15 @@ namespace Rc.Web.Controllers
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
 
-        public AccountController()
+        public AccountController(IDocumentSession session)
         {
+            this.UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(() => session));
         }
 
-        public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+        public AccountController(IDocumentSession session, ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
-            UserManager = userManager;
+            this.UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(() => session));
+
             AccessTokenFormat = accessTokenFormat;
         }
 
@@ -87,7 +89,7 @@ namespace Rc.Web.Controllers
 
             List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-            foreach (IdentityUserLogin linkedAccount in user.Logins)
+            foreach (var linkedAccount in user.Logins)
             {
                 logins.Add(new UserLoginInfoViewModel
                 {
