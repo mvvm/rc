@@ -37,7 +37,7 @@ namespace Rc.Web.App_Start
             };
             documentStore.Conventions.JsonContractResolver = new CustomRavenSerializer();
             documentStore.Conventions.DefaultQueryingConsistency = ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite;
-
+            AppHelper.Store = documentStore;
             return documentStore.Initialize()
                 //.InitBriefBoxIds()
                 //.InitBriefBoxIndexes()
@@ -51,6 +51,7 @@ namespace Rc.Web.App_Start
         /// change the defaults), as Unity allows resolving a concrete type even if it was not previously registered.</remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
+            AppHelper.Container = container;
             // NOTE: To load from web.config uncomment the line below. Make sure to add a Microsoft.Practices.Unity.Configuration to the using statements.
             // container.LoadConfiguration();
 

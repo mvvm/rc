@@ -11,12 +11,14 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using RavenDB.AspNet.Identity;
 using Microsoft.Owin.Security.OAuth;
 using Rc.Web.Models;
 using Rc.Web.Providers;
 using Rc.Web.Results;
 using Raven.Client;
+using RavenDB.AspNet.Identity;
+using Rc.Documents;
+using Rc.Web.App_Start;
 
 namespace Rc.Web.Controllers
 {

@@ -8,6 +8,8 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Rc.Web.Models;
+using Rc.Documents;
+using Rc.Web.App_Start;
 
 namespace Rc.Web.Providers
 {
