@@ -14,14 +14,10 @@ namespace Rc.Web.Areas.HelpPage.Controllers
         private const string ErrorViewName = "Error";
 
         public HelpController()
-            : this(GlobalConfiguration.Configuration)
         {
+            Configuration = GlobalConfiguration.Configuration;
         }
-
-        public HelpController(HttpConfiguration config)
-        {
-            Configuration = config;
-        }
+        
 
         public HttpConfiguration Configuration { get; private set; }
 
