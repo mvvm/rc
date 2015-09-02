@@ -12,15 +12,59 @@ using Rc.Web.Models;
 using RavenDB.AspNet.Identity;
 using Rc.Web.App_Start;
 using Rc.Documents;
+using SendGrid;
+using System.Net;
+using System.Configuration;
+using System.Diagnostics;
+using Raven.Client;
+using Twilio;
 
 namespace Rc.Web
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            await configSendGridasync(message);
+        }
+
+        // Use NuGet to install SendGrid (Basic C# client lib) 
+        private async Task configSendGridasync(IdentityMessage message)
+        {
+            var myMessage = new SendGridMessage();
+            myMessage.AddTo(message.Destination);
+            myMessage.From = new System.Net.Mail.MailAddress(
+                                "console.dnd@gmail.com", "Dmitry Goncharov");
+
+            myMessage.Subject = message.Subject;
+            myMessage.Text = message.Body;
+            myMessage.Html = message.Body;
+
+            var credentials = new NetworkCredential(
+                       ConfigurationManager.AppSettings["mailAccount"],
+                       ConfigurationManager.AppSettings["mailPassword"]
+                       );
+
+            // Create a Web transport for sending email.
+            var transportWeb = new SendGrid.Web(credentials);
+
+            try
+            {
+                // Send the email.
+                if (transportWeb != null)
+                {
+                    await transportWeb.DeliverAsync(myMessage);
+                }
+                else
+                {
+                    Trace.TraceError("Failed to create Web transport.");
+                    await Task.FromResult(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message + " SendGrid probably not configured correctly.");
+            }
         }
     }
 
@@ -28,7 +72,18 @@ namespace Rc.Web
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your SMS service here to send a text message.
+            var Twilio = new TwilioRestClient(
+               ConfigurationManager.AppSettings["TwilioSid"],
+               ConfigurationManager.AppSettings["TwilioToken"]
+           );
+            var result = Twilio.SendMessage(
+                ConfigurationManager.AppSettings["TwilioFromPhone"],
+               message.Destination, message.Body);
+
+            // Status is one of Queued, Sending, Sent, Failed or null if the number is not valid
+            Trace.TraceInformation(result.Status);
+
+            // Twilio doesn't currently have an async API, so return success.
             return Task.FromResult(0);
         }
     }
@@ -41,9 +96,10 @@ namespace Rc.Web
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(()=> { return AppHelper.Store.OpenSession(); }));
+            var userStore = new UserStore<ApplicationUser>(context.Get<IDocumentSession>());
+            var manager = new ApplicationUserManager(userStore);
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -52,14 +108,14 @@ namespace Rc.Web
             };
 
             // Configure validation logic for passwords
-            manager.PasswordValidator = new PasswordValidator
-            {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
-            };
+            //manager.PasswordValidator = new PasswordValidator
+            //{
+            //    RequiredLength = 6,
+            //    RequireNonLetterOrDigit = true,
+            //    RequireDigit = true,
+            //    RequireLowercase = true,
+            //    RequireUppercase = true,
+            //};
 
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;
@@ -82,7 +138,7 @@ namespace Rc.Web
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = 
+                manager.UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
