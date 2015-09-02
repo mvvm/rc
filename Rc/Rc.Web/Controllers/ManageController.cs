@@ -19,12 +19,7 @@ namespace Rc.Web.Controllers
         public ManageController()
         {
         }
-
-        public ManageController(ApplicationUserManager userManager)
-        {
-            UserManager = userManager;
-        }
-
+        
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
         {

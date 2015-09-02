@@ -23,13 +23,7 @@ namespace Rc.Web.Controllers
         public AccountController()
         {
         }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
+        
         public ApplicationUserManager UserManager
         {
             get
