@@ -243,6 +243,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WebExtensions.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -325,9 +326,21 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rc.Documents\Rc.Documents.csproj">
+      <Project>{c22e39c6-324c-4f6c-be84-e0d426b07e8a}</Project>
+      <Name>Rc.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rc.Indexes\Rc.Indexes.csproj">
+      <Project>{0211cfe9-74f9-40b5-a04e-0101b795b78e}</Project>
+      <Name>Rc.Indexes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rc.Raven\Rc.Raven.csproj">
       <Project>{9053791d-1860-43f5-9a8a-7e25129c8df3}</Project>
       <Name>Rc.Raven</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rc.Transforms\Rc.Transforms.csproj">
+      <Project>{f1bf5acf-4752-4b55-97c4-c1bfbcf78a55}</Project>
+      <Name>Rc.Transforms</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

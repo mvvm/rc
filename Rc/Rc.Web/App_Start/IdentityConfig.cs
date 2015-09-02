@@ -11,6 +11,7 @@ using Microsoft.Owin.Security;
 using Rc.Web.Models;
 using RavenDB.AspNet.Identity;
 using Rc.Web.App_Start;
+using Rc.Documents;
 
 namespace Rc.Web
 {

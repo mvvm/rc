@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using Rc.Web.Models;
+using Rc.Documents;
+using Rc.Web.App_Start;
 
 namespace Rc.Web
 {
