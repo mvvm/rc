@@ -81,7 +81,7 @@ namespace Rc.Web.Controllers
                     ViewBag.Link = callbackUrl;
                     ViewBag.errorMessage = "Вам необходимо подтвердить ваш адрес электронной почты. "
                                          + "Ссылка для подтверждения была отправлена.";
-                    return View("Ошибка");
+                    return View("Error");
                 }
             }
 
