@@ -79,9 +79,9 @@ namespace Rc.Web.Controllers
 
                     // Uncomment to debug locally  
                     ViewBag.Link = callbackUrl;
-                    ViewBag.errorMessage = "You must have a confirmed email to log on. "
-                                         + "The confirmation token has been resent to your email account.";
-                    return View("Error");
+                    ViewBag.errorMessage = "Вам необходимо подтвердить ваш адрес электронной почты. "
+                                         + "Ссылка для подтверждения была отправлена.";
+                    return View("Ошибка");
                 }
             }
 
@@ -182,8 +182,8 @@ namespace Rc.Web.Controllers
                     string callbackUrl = await SendEmailConfirmationTokenAsync(user.Id, "Confirm your account");
 
 
-                    ViewBag.Message = "Check your email and confirm your account, you must be confirmed "
-                                    + "before you can log in.";
+                    ViewBag.Message = "Проверьте вашу электронную почту, мы вам отправили данные для подтверждения."
+                                    + "Затем вы сможете войти на сайт.";
 
                     // For local debug only
                     ViewBag.Link = callbackUrl;
@@ -191,7 +191,7 @@ namespace Rc.Web.Controllers
                     // Save the user we put in RavenDB.
                     ravenSession.SaveChanges();
 
-                    return View("Info");
+                    return View("Подтверждение Email");
                     //return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
